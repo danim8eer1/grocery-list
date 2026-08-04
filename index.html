@@ -5,213 +5,127 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Meals">
+<meta name="apple-mobile-web-app-title" content="Pantry">
 <meta name="theme-color" content="#f5f4ef">
-<title>Meal Tracker</title>
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231a1a1a'/%3E%3Ctext x='50' y='68' font-size='56' text-anchor='middle' fill='white'%3E🍽%3C/text%3E%3C/svg%3E">
+<title>Pantry &amp; Shopping</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231a1a1a'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white'%3E🛒%3C/text%3E%3C/svg%3E">
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{background:#f7f6f1;min-height:100vh;margin:0;padding:0;font-family:-apple-system,system-ui,sans-serif;color:#1a1a1a;}
 body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);}
-
-/* NAV TABS */
 .tabs{display:flex;background:#fff;border-bottom:0.5px solid rgba(0,0,0,.1);position:sticky;top:0;z-index:100;padding-top:env(safe-area-inset-top);}
-.tab{flex:1;padding:14px 8px;text-align:center;font-size:13px;font-weight:500;color:#999;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;background:none;border-left:none;border-right:none;border-top:none;font-family:inherit;}
+.tab{flex:1;padding:15px 8px;text-align:center;font-size:14px;font-weight:500;color:#999;cursor:pointer;border:none;border-bottom:2px solid transparent;background:none;font-family:inherit;transition:all .15s;}
 .tab.active{color:#1a1a1a;border-bottom-color:#1a1a1a;}
-
-/* SCREENS */
-.screen{display:none;max-width:680px;margin:0 auto;padding:16px;}
+.screen{display:none;max-width:640px;margin:0 auto;padding:16px;}
 .screen.active{display:block;}
-
-/* SHARED */
-.section-title{font-size:12px;font-weight:600;color:#999;letter-spacing:.06em;text-transform:uppercase;margin:20px 0 8px;}
-.card{background:#fff;border:0.5px solid rgba(0,0,0,.1);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
-
-/* TRACKER SCREEN */
-.hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;}
-.hdr h1{font-size:21px;font-weight:500;margin:0;letter-spacing:-.01em;}
-.hdr .dt{font-size:12px;color:#999;}
-.sub{font-size:12px;color:#999;margin:0 0 16px;}
-.countdown{background:#f0efe9;border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
-.cd-left .lbl{font-size:12px;color:#888;margin:0 0 3px;}
-.cd-left .val{font-size:20px;font-weight:500;margin:0;letter-spacing:-.01em;}
-.cd-left .val.due{color:#c0392b;}
-.cd-left .val.pulse{animation:pulse 1.4s ease-in-out infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
-.chime{display:flex;align-items:center;gap:5px;font-size:12px;color:#888;cursor:pointer;}
-.chime input{margin:0;}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
-.stat{background:#f0efe9;border-radius:10px;padding:10px 12px;}
-.stat .k{font-size:11px;color:#888;margin:0;}
-.stat .v{font-size:19px;font-weight:500;margin:3px 0 0;letter-spacing:-.01em;}
-.stat .v.good{color:#0a6b4e;}
-.stat .v.over{color:#c0392b;}
-.alarms{background:#fff8ec;border:0.5px solid #f0d080;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#7a5800;}
-.alarms b{display:block;margin-bottom:2px;}
-.meal-card{background:#fff;border:0.5px solid rgba(0,0,0,.1);border-radius:12px;padding:14px 16px;margin-bottom:10px;transition:opacity .2s;}
-.meal-card.done{opacity:.5;}
-.meal-card.evening{border-color:#c0623a;background:#fdf2ee;}
-.meal-card-top{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
-.num{width:26px;height:26px;border-radius:50%;background:#f0efe9;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;}
-.meal-card.active .num{background:#fde8c0;color:#7a4800;}
-.meal-card.due .num{background:#fad0cc;color:#8b1a1a;}
-.time-lbl .t{font-size:15px;font-weight:500;line-height:1.2;}
-.time-lbl .l{font-size:11px;color:#999;}
-.meal-name{font-size:14px;font-weight:600;margin:0 0 2px;}
-.meal-effort{font-size:11px;color:#999;margin:0 0 4px;}
-.meal-desc{font-size:13px;color:#555;line-height:1.5;margin:0 0 10px;}
-.ev-note{font-size:12px;color:#a04020;font-style:italic;margin:0 0 8px;}
-.out-of-stock-badge{display:inline-block;background:#fee;border:0.5px solid #fcc;border-radius:4px;font-size:11px;color:#c0392b;padding:2px 6px;margin-bottom:8px;}
-.actions{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
-.btn{background:transparent;border:0.5px solid rgba(0,0,0,.18);border-radius:8px;padding:7px 13px;font-size:13px;cursor:pointer;font-family:inherit;color:#1a1a1a;transition:background .12s;}
-.btn:hover{background:#f0efe9;}
-.btn.primary{background:#1a1a1a;color:#fff;border-color:#1a1a1a;}
-.btn.primary:hover{background:#333;}
-.btn.ate{background:#0a6b4e;color:#fff;border-color:#0a6b4e;}
-.btn.skipped{background:#e8a090;color:#5a1a0a;border-color:#c05030;}
-details{margin-top:4px;}
-details summary{cursor:pointer;font-size:12px;color:#888;padding:3px 0;user-select:none;list-style:none;}
-details summary::-webkit-details-marker{display:none;}
-details summary::before{content:"▸ ";display:inline-block;transition:transform .12s;}
-details[open] summary::before{transform:rotate(90deg);}
-.swap-list{margin-top:6px;display:flex;flex-direction:column;gap:3px;}
-.swap-item{display:flex;justify-content:space-between;align-items:center;padding:7px 8px;border-radius:6px;cursor:pointer;font-size:13px;transition:background .1s;}
-.swap-item:hover{background:#f0efe9;}
-.swap-item.unavailable{opacity:.35;cursor:default;pointer-events:none;}
-.swap-item .sc{font-size:11px;color:#999;margin-left:8px;white-space:nowrap;}
-.swap-item .sw-oos{font-size:10px;color:#c0392b;margin-left:4px;}
-.footer{margin-top:16px;padding-top:12px;border-top:0.5px solid rgba(0,0,0,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
-.footer .info{font-size:11px;color:#bbb;}
-.reset{background:transparent;border:0.5px solid rgba(0,0,0,.15);color:#bbb;border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:inherit;}
-.reset:hover{color:#c0392b;border-color:#e24b4a;}
-
-/* PANTRY SCREEN */
-.pantry-intro{font-size:13px;color:#666;margin:0 0 16px;line-height:1.5;}
-.oos-count{display:inline-block;background:#fee;border:0.5px solid #fcc;border-radius:20px;font-size:12px;color:#c0392b;padding:3px 10px;margin-bottom:16px;font-weight:500;}
-.ing-group{margin-bottom:4px;}
-.ing-item{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:#fff;border:0.5px solid rgba(0,0,0,.08);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:all .12s;user-select:none;}
+.hdr h1{font-size:22px;font-weight:600;margin:4px 0 2px;}
+.intro{font-size:13px;color:#666;margin:0 0 14px;line-height:1.5;}
+.legend{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.legend span{font-size:11px;padding:4px 9px;border-radius:20px;font-weight:600;}
+.section-title{font-size:11px;font-weight:700;color:#999;letter-spacing:.07em;text-transform:uppercase;margin:20px 0 8px;}
+.oos-count{display:inline-block;background:#fee;border:0.5px solid #fcc;border-radius:20px;font-size:12px;color:#c0392b;padding:3px 10px;margin-bottom:14px;font-weight:500;}
+.add-item-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:#fff;border:0.5px dashed rgba(0,0,0,.2);border-radius:10px;font-size:14px;color:#555;cursor:pointer;font-family:inherit;margin-bottom:20px;transition:all .12s;}
+.add-item-btn:hover{background:#f0efe9;border-color:#aaa;}
+.ing-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#fff;border:0.5px solid rgba(0,0,0,.08);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:all .12s;user-select:none;}
 .ing-item:hover{background:#f7f6f1;}
 .ing-item.oos{background:#fef6f6;border-color:#f5c0c0;}
 .ing-item.oos .ing-name{color:#999;text-decoration:line-through;}
+.ing-item-custom{border-style:dashed;}
 .ing-left{display:flex;align-items:center;gap:10px;}
-.ing-icon{font-size:18px;width:28px;text-align:center;}
-.ing-name{font-size:14px;font-weight:500;}
-.ing-cat{font-size:11px;color:#aaa;margin-top:1px;}
-.ing-toggle{width:22px;height:22px;border-radius:50%;border:0.5px solid rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;transition:all .12s;}
+.ing-icon{font-size:19px;width:28px;text-align:center;}
+.ing-name{font-size:15px;font-weight:500;}
+.ing-sub{font-size:11px;color:#aaa;margin-top:1px;}
+.yel-pill{font-size:10px;font-weight:700;background:#fdf0d8;color:#8a5a10;padding:2px 7px;border-radius:20px;margin-left:6px;}
+.ing-right{display:flex;align-items:center;gap:4px;}
+.ing-toggle{width:23px;height:23px;border-radius:50%;border:0.5px solid rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
 .ing-item.oos .ing-toggle{background:#fcc;border-color:#f99;color:#c0392b;}
 .ing-item:not(.oos) .ing-toggle{background:#e8f5f0;border-color:#a8d8c8;color:#0a6b4e;}
-
-/* ADD ITEM */
-.add-item-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:#fff;border:0.5px dashed rgba(0,0,0,.2);border-radius:10px;font-size:14px;color:#555;cursor:pointer;font-family:inherit;margin-bottom:20px;transition:all .12s;}
-.add-item-btn:hover{background:#f0efe9;border-color:#aaa;}
+.del-btn{width:28px;height:28px;border-radius:50%;background:transparent;border:0.5px solid rgba(0,0,0,.12);color:#ccc;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:2px;padding:0;}
+.del-btn:hover{background:#fee;border-color:#fcc;color:#c0392b;}
+.custom-badge{font-size:10px;background:#f0f0f0;border-radius:4px;padding:1px 5px;color:#999;margin-left:5px;}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:flex-end;justify-content:center;}
 .modal-overlay.open{display:flex;}
-.modal{background:#fff;border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:680px;box-shadow:0 -4px 30px rgba(0,0,0,.15);}
+.modal{background:#fff;border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:640px;}
 .modal h2{font-size:17px;font-weight:600;margin:0 0 20px;text-align:center;}
 .modal label{font-size:12px;font-weight:600;color:#999;letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:6px;}
-.modal input,.modal select{width:100%;padding:12px 14px;border:0.5px solid rgba(0,0,0,.18);border-radius:10px;font-size:15px;font-family:inherit;background:#f7f6f1;color:#1a1a1a;margin-bottom:16px;outline:none;}
+.modal input,.modal select{width:100%;padding:12px 14px;border:0.5px solid rgba(0,0,0,.18);border-radius:10px;font-size:15px;font-family:inherit;background:#f7f6f1;margin-bottom:16px;outline:none;}
 .modal input:focus,.modal select:focus{border-color:#1a1a1a;background:#fff;}
 .modal-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .modal-btns{display:flex;gap:10px;margin-top:4px;}
 .modal-cancel{flex:1;padding:13px;background:transparent;border:0.5px solid rgba(0,0,0,.15);border-radius:10px;font-size:15px;cursor:pointer;font-family:inherit;color:#666;}
 .modal-save{flex:2;padding:13px;background:#1a1a1a;border:none;border-radius:10px;font-size:15px;cursor:pointer;font-family:inherit;color:#fff;font-weight:500;}
-.modal-save:hover{background:#333;}
-.ing-item .del-btn{width:28px;height:28px;border-radius:50%;background:transparent;border:0.5px solid rgba(0,0,0,.12);color:#ccc;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s;margin-left:6px;padding:0;}
-.ing-item .del-btn:hover{background:#fee;border-color:#fcc;color:#c0392b;}
-.ing-item-custom{border-style:dashed;}
-.custom-badge{font-size:10px;background:#f0f0f0;border-radius:4px;padding:1px 5px;color:#999;margin-left:5px;}
-
-/* SHOPPING SCREEN */
-.shop-intro{font-size:13px;color:#666;margin:0 0 16px;line-height:1.5;}
-.shop-empty{text-align:center;padding:40px 20px;color:#aaa;font-size:14px;}
-.shop-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fff;border:0.5px solid rgba(0,0,0,.08);border-radius:10px;margin-bottom:6px;}
-.shop-item .si-icon{font-size:18px;width:26px;text-align:center;}
-.shop-item .si-name{font-size:14px;font-weight:500;flex:1;}
-.shop-item .si-cat{font-size:11px;color:#aaa;}
-.shop-suggested{background:#f0f7ff;border:0.5px solid #c0d8f5;border-radius:10px;padding:12px 14px;margin-bottom:6px;}
-.shop-suggested .ss-title{font-size:12px;font-weight:600;color:#2255a0;margin:0 0 8px;}
-.shop-suggested ul{margin:0;padding-left:16px;font-size:13px;color:#444;line-height:1.8;}
-.clear-oos{width:100%;padding:12px;background:#fff;border:0.5px solid rgba(0,0,0,.15);border-radius:10px;font-size:13px;color:#666;cursor:pointer;font-family:inherit;margin-top:8px;transition:background .12s;}
+.shop-empty{text-align:center;padding:44px 20px;color:#aaa;font-size:14px;line-height:1.6;}
+.shop-item{display:flex;align-items:center;gap:12px;padding:13px 14px;background:#fff;border:0.5px solid rgba(0,0,0,.08);border-radius:10px;margin-bottom:6px;cursor:pointer;user-select:none;transition:all .12s;}
+.shop-item:active{transform:scale(.99);}
+.shop-item.got{opacity:.45;background:#f0efe9;}
+.shop-item.got .si-name{text-decoration:line-through;color:#999;}
+.si-check{width:23px;height:23px;border-radius:6px;border:1.5px solid #ccc;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;flex-shrink:0;}
+.shop-item.got .si-check{background:#0a6b4e;border-color:#0a6b4e;}
+.si-icon{font-size:18px;width:24px;text-align:center;}
+.si-name{font-size:15px;font-weight:500;flex:1;}
+.si-cat{font-size:11px;color:#aaa;}
+.clear-oos{width:100%;padding:13px;background:#fff;border:0.5px solid rgba(0,0,0,.15);border-radius:10px;font-size:14px;color:#666;cursor:pointer;font-family:inherit;margin-top:12px;}
 .clear-oos:hover{background:#f0efe9;}
+.footer{margin-top:22px;padding-top:12px;border-top:0.5px solid rgba(0,0,0,.08);font-size:11px;color:#bbb;text-align:center;}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <div class="tabs">
-  <button class="tab active" onclick="showTab('tracker')">🍽 Today</button>
-  <button class="tab" onclick="showTab('pantry')">📦 Pantry</button>
-  <button class="tab" onclick="showTab('shop')">🛒 Shop</button>
+  <button class="tab active" onclick="showTab('pantry',this)">📦 Pantry</button>
+  <button class="tab" onclick="showTab('shop',this)">🛒 Shop</button>
 </div>
 
-<!-- TRACKER TAB -->
-<div class="screen active" id="tab-tracker">
-  <div class="hdr">
-    <h1>Meal tracker</h1>
-    <div class="dt" id="today-date"></div>
+<div class="screen active" id="tab-pantry">
+  <div class="hdr"><h1>Pantry</h1></div>
+  <p class="intro">Tap any item to mark it out of stock. It drops onto your shopping list automatically. Tap again to restock.</p>
+  <div class="legend">
+    <span style="background:#e2f2ea;color:#1a6b48;">● anytime</span>
+    <span style="background:#fdf0d8;color:#8a5a10;">🟡 post-workout only</span>
   </div>
-  <p class="sub">2,700 cal · 5 meals + evening block</p>
-  <div class="countdown">
-    <div class="cd-left">
-      <p class="lbl">Next meal</p>
-      <p class="val" id="next-val">—</p>
-    </div>
-    <label class="chime">
-      <input type="checkbox" id="chime-on" checked>
-      Chime when due
-    </label>
-  </div>
-  <div class="stats">
-    <div class="stat"><p class="k">Eaten</p><p class="v" id="cal-eaten">0</p></div>
-    <div class="stat"><p class="k">Remaining</p><p class="v" id="cal-left">2700</p></div>
-    <div class="stat"><p class="k">Done</p><p class="v" id="meals-done">0 / 6</p></div>
-  </div>
-  <div class="alarms">
-    <b>📱 Phone alarms (set once, recurring):</b>
-    6:00 AM · 9:00 AM · 12:00 PM · 3:00 PM · 6:00 PM · 8:30 PM
-  </div>
-  <div id="meal-cards"></div>
-  <div class="footer">
-    <div class="info">Saves automatically · Resets at 4am</div>
-    <button class="reset" id="reset-btn">Reset today</button>
-  </div>
-</div>
-
-<!-- PANTRY TAB -->
-<div class="screen" id="tab-pantry">
-  <div class="hdr" style="margin-top:4px;"><h1>Pantry</h1></div>
-  <p class="pantry-intro">Tap to toggle in/out of stock. Meals update instantly. Tap ✕ on custom items to delete them.</p>
   <div id="oos-count-badge"></div>
-  <button class="add-item-btn" id="open-add-modal">＋ Add item to pantry</button>
+  <button class="add-item-btn" id="open-add-modal">＋ Add item</button>
   <div id="ingredient-list"></div>
+  <div class="footer">Saves automatically on this device.</div>
 </div>
 
-<!-- ADD ITEM MODAL -->
+<div class="screen" id="tab-shop">
+  <div class="hdr"><h1>Shopping list</h1></div>
+  <p class="intro">Everything you marked out of stock, grouped by aisle. Tap to check off as you shop.</p>
+  <div id="shop-list"></div>
+</div>
+
 <div class="modal-overlay" id="add-modal">
   <div class="modal">
-    <h2>Add pantry item</h2>
+    <h2>Add item</h2>
     <label>Item name</label>
-    <input type="text" id="new-ing-name" placeholder="e.g. Brown rice, Protein powder…" autocomplete="off">
+    <input type="text" id="new-ing-name" placeholder="e.g. Coconut aminos" autocomplete="off">
     <div class="modal-row">
       <div>
-        <label>Category</label>
+        <label>Aisle</label>
         <select id="new-ing-cat">
-          <option>Protein</option><option>Dairy</option><option>Dairy-alt</option>
-          <option>Produce</option><option>Frozen</option><option>Grains</option>
-          <option>Condiment</option><option>Nuts/Seeds</option><option>Snacks</option>
-          <option>Drinks</option><option>Other</option>
+          <option>Produce</option>
+          <option>Meat &amp; Seafood</option>
+          <option>Dairy &amp; Eggs</option>
+          <option>Canned &amp; Protein Snacks</option>
+          <option>Fats &amp; Nuts</option>
+          <option>Drinks &amp; Condiments</option>
+          <option>Spices</option>
+          <option>Starches</option>
+          <option>Supplement</option>
+          <option>Other</option>
         </select>
       </div>
       <div>
-        <label>Location</label>
-        <select id="new-ing-group">
-          <option value="fridge">Fridge</option><option value="freezer">Freezer</option>
-          <option value="pantry" selected>Pantry</option><option value="counter">Counter</option>
+        <label>Tag</label>
+        <select id="new-ing-light">
+          <option value="green">Anytime</option>
+          <option value="yellow">Post-workout</option>
         </select>
       </div>
     </div>
-    <label>Emoji icon (optional)</label>
-    <input type="text" id="new-ing-icon" placeholder="🥗" maxlength="2" style="font-size:22px;text-align:center;letter-spacing:4px;">
+    <label>Emoji (optional)</label>
+    <input type="text" id="new-ing-icon" placeholder="🥗" maxlength="2" style="font-size:22px;text-align:center;">
     <div class="modal-btns">
       <button class="modal-cancel" id="close-add-modal">Cancel</button>
       <button class="modal-save" id="save-add-modal">Add item</button>
@@ -219,658 +133,234 @@ details[open] summary::before{transform:rotate(90deg);}
   </div>
 </div>
 
-<!-- SHOP TAB -->
-<div class="screen" id="tab-shop">
-  <div class="hdr" style="margin-top:4px;">
-    <h1>Shopping list</h1>
-  </div>
-  <p class="shop-intro">Items you've marked out of stock in the Pantry tab appear here automatically.</p>
-  <div id="shop-list"></div>
-  <div class="section-title">Always buy</div>
-  <div class="shop-suggested">
-    <p class="ss-title">Suggested weekly staples</p>
-    <ul>
-      <li>Protein powder or Shakeology</li>
-      <li>Rotisserie chicken (replaces frozen chicken for speed)</li>
-      <li>Cottage cheese (high-protein snack filler)</li>
-      <li>Whole grain bread or tortillas</li>
-      <li>Brown rice microwave pouches</li>
-      <li>Greek yogurt single-serve cups (grab & go)</li>
-      <li>Baby carrots or celery</li>
-      <li>Canned black beans</li>
-    </ul>
-  </div>
-</div>
-
 <script>
-// ─────────────────────────────────────────────────────────────────
-// INGREDIENTS — every item in Daniel's kitchen with metadata
-// ─────────────────────────────────────────────────────────────────
-const INGREDIENTS = [
-  // PROTEINS
-  {id:"eggs",         name:"Eggs",                    icon:"🥚", cat:"Protein",  group:"fridge"},
-  {id:"ground_beef",  name:"Grass-fed ground beef",   icon:"🥩", cat:"Protein",  group:"fridge"},
-  {id:"chicken_saus", name:"Chicken sausages",        icon:"🌭", cat:"Protein",  group:"fridge"},
-  {id:"turkey_burg",  name:"Turkey burgers (frozen)", icon:"🍔", cat:"Protein",  group:"freezer"},
-  {id:"turkey_saus",  name:"Turkey breakfast sausage",icon:"🌭", cat:"Protein",  group:"freezer"},
-  {id:"chicken_br",   name:"Mary's chicken breast",   icon:"🍗", cat:"Protein",  group:"freezer"},
-  {id:"chick_nugg",   name:"Applegate chicken nuggets",icon:"🍗",cat:"Protein",  group:"freezer"},
-  {id:"tuna",         name:"Canned skipjack tuna",    icon:"🐟", cat:"Protein",  group:"pantry"},
-  {id:"sardines",     name:"Sardines",                icon:"🐟", cat:"Protein",  group:"pantry"},
-  {id:"clams",        name:"Canned clams",            icon:"🦪", cat:"Protein",  group:"pantry"},
-  {id:"veggie_burg",  name:"Dr. Prager's veggie burgers",icon:"🥗",cat:"Protein", group:"freezer"},
-  {id:"frittata_tb",  name:"Frittata (tomato basil)", icon:"🍳", cat:"Protein",  group:"freezer"},
-  {id:"frittata_sw",  name:"Frittata (spinach egg white)",icon:"🍳",cat:"Protein",group:"freezer"},
-  {id:"beef_sticks",  name:"Beef mini sticks",        icon:"🥩", cat:"Protein",  group:"pantry"},
-  // DAIRY / DAIRY-ALT
-  {id:"greek_yog",    name:"FAGE Greek yogurt",       icon:"🥛", cat:"Dairy",    group:"fridge"},
-  {id:"coco_cult",    name:"Coconut Cult yogurt",     icon:"🥥", cat:"Dairy",    group:"fridge"},
-  {id:"almond_milk",  name:"Unsweetened almond milk", icon:"🥛", cat:"Dairy-alt",group:"fridge"},
-  // PRODUCE
-  {id:"spinach",      name:"Baby spinach",            icon:"🥬", cat:"Produce",  group:"fridge"},
-  {id:"avocado",      name:"Avocados",                icon:"🥑", cat:"Produce",  group:"counter"},
-  {id:"sweet_pot",    name:"Sweet potato (cubed)",    icon:"🍠", cat:"Produce",  group:"fridge"},
-  {id:"veg_kabobs",   name:"Veggie kabobs",           icon:"🫑", cat:"Produce",  group:"fridge"},
-  {id:"pomegranate",  name:"Pomegranate seeds",       icon:"🍎", cat:"Produce",  group:"fridge"},
-  {id:"mixed_berries",name:"Mixed berries",           icon:"🍓", cat:"Produce",  group:"fridge"},
-  {id:"banana",       name:"Bananas",                 icon:"🍌", cat:"Produce",  group:"counter"},
-  {id:"kiwi",         name:"Yellow kiwis",            icon:"🥝", cat:"Produce",  group:"counter"},
-  {id:"oranges",      name:"Cuties oranges",          icon:"🍊", cat:"Produce",  group:"counter"},
-  {id:"watermelon",   name:"Watermelon",              icon:"🍉", cat:"Produce",  group:"counter"},
-  {id:"lemon",        name:"Lemons",                  icon:"🍋", cat:"Produce",  group:"counter"},
-  // FROZEN PRODUCE / FRUIT
-  {id:"frz_banana",   name:"Frozen bananas",          icon:"🍌", cat:"Frozen",   group:"freezer"},
-  {id:"frz_peaches",  name:"Frozen peaches",          icon:"🍑", cat:"Frozen",   group:"freezer"},
-  {id:"frz_cherries", name:"Frozen cherries",         icon:"🍒", cat:"Frozen",   group:"freezer"},
-  {id:"frz_blueberry",name:"Frozen blueberries",      icon:"🫐", cat:"Frozen",   group:"freezer"},
-  {id:"frz_pineapple",name:"Frozen pineapple",        icon:"🍍", cat:"Frozen",   group:"freezer"},
-  {id:"frz_strawberry",name:"Frozen strawberries",   icon:"🍓", cat:"Frozen",   group:"freezer"},
-  {id:"frz_peppers",  name:"Frozen bell pepper blend",icon:"🫑", cat:"Frozen",   group:"freezer"},
-  {id:"frz_potato",   name:"WF baby potato blend",    icon:"🥔", cat:"Frozen",   group:"freezer"},
-  {id:"frz_veggies",  name:"Frozen vegetable medley", icon:"🥦", cat:"Frozen",   group:"freezer"},
-  // GRAINS / CARBS
-  {id:"quinoa",       name:"White quinoa",            icon:"🌾", cat:"Grains",   group:"pantry"},
-  {id:"white_rice",   name:"White rice",              icon:"🍚", cat:"Grains",   group:"pantry"},
-  {id:"oatmeal",      name:"GF rolled oatmeal",       icon:"🥣", cat:"Grains",   group:"pantry"},
-  {id:"granola",      name:"Sprouted honey hemp granola",icon:"🥣",cat:"Grains",  group:"pantry"},
-  {id:"pancake_mix",  name:"Birch Benders pancake mix",icon:"🥞",cat:"Grains",   group:"pantry"},
-  {id:"amys_burrito", name:"Amy's GF/DF burritos",    icon:"🌯", cat:"Frozen",   group:"freezer"},
-  // CONDIMENTS / SAUCES
-  {id:"pb",           name:"Peanut butter",           icon:"🥜", cat:"Condiment",group:"pantry"},
-  {id:"olive_oil",    name:"Extra virgin olive oil",  icon:"🫙", cat:"Condiment",group:"pantry"},
-  {id:"vegenaise",    name:"Vegenaise (vegan mayo)",  icon:"🫙", cat:"Condiment",group:"fridge"},
-  {id:"hummus",       name:"Roasted red pepper hummus",icon:"🫙",cat:"Condiment",group:"fridge"},
-  {id:"bitchin",      name:"Bitchin' Sauce (chipotle)",icon:"🌶",cat:"Condiment",group:"fridge"},
-  {id:"mustard",      name:"Yellow mustard",          icon:"🫙", cat:"Condiment",group:"pantry"},
-  {id:"ketchup",      name:"Organic ketchup",         icon:"🍅", cat:"Condiment",group:"fridge"},
-  {id:"sundried_tom", name:"Sun-dried tomatoes",      icon:"🍅", cat:"Condiment",group:"fridge"},
-  {id:"pickled_onion",name:"Pickled red onions",      icon:"🧅", cat:"Condiment",group:"fridge"},
-  {id:"applesauce",   name:"Unsweetened applesauce",  icon:"🍎", cat:"Condiment",group:"fridge"},
-  // NUTS / SEEDS
-  {id:"walnuts",      name:"Walnuts",                 icon:"🫘", cat:"Nuts/Seeds",group:"pantry"},
-  {id:"cashews",      name:"Roasted cashews",         icon:"🫘", cat:"Nuts/Seeds",group:"pantry"},
-  {id:"sunflower",    name:"Sunflower seeds",         icon:"🌻", cat:"Nuts/Seeds",group:"pantry"},
-  {id:"pumpkin_seeds",name:"Pumpkin seeds",           icon:"🫘", cat:"Nuts/Seeds",group:"pantry"},
-  {id:"chia",         name:"Black chia seeds",        icon:"🫘", cat:"Nuts/Seeds",group:"pantry"},
-  {id:"flax",         name:"Ground flaxseed",         icon:"🌾", cat:"Nuts/Seeds",group:"pantry"},
-  // SNACKS
-  {id:"dates",        name:"Medjool dates",           icon:"🍬", cat:"Snacks",   group:"pantry"},
-  {id:"dried_mango",  name:"Dried mango",             icon:"🥭", cat:"Snacks",   group:"pantry"},
-  {id:"protein_chips",name:"Wild protein chips",      icon:"🥨", cat:"Snacks",   group:"pantry"},
-  {id:"dark_choc",    name:"Choc Zero dark chocolate",icon:"🍫", cat:"Snacks",   group:"pantry"},
-  {id:"popcorn",      name:"Garlic parmesan popcorn", icon:"🍿", cat:"Snacks",   group:"pantry"},
-  // OTHER
-  {id:"nipit",        name:"Nipit (Burmese dish)",    icon:"🍲", cat:"Other",    group:"counter"},
-  {id:"kidney_beans", name:"Canned kidney beans",     icon:"🫘", cat:"Pantry",   group:"pantry"},
-  {id:"broth",        name:"Chicken/beef broth",      icon:"🫙", cat:"Pantry",   group:"pantry"},
-  {id:"garlic_frz",   name:"Frozen garlic (tray)",    icon:"🧄", cat:"Frozen",   group:"freezer"},
-  {id:"coconut_water",name:"Vita Coco coconut water", icon:"🥥", cat:"Drinks",   group:"fridge"},
+// ── GROCERY LIST ─────────────────────────────────────────────────
+// light: green = anytime | yellow = post-workout only
+const ITEMS = [
+  // Produce
+  {id:"greens",     name:"Power greens blend",     icon:"🥬", cat:"Produce", light:"green"},
+  {id:"spinach",    name:"Baby spinach",           icon:"🥬", cat:"Produce", light:"green"},
+  {id:"onion",      name:"Onion",                  icon:"🧅", cat:"Produce", light:"green"},
+  {id:"avocado",    name:"Avocados",               icon:"🥑", cat:"Produce", light:"green"},
+  {id:"lemon",      name:"Lemons",                 icon:"🍋", cat:"Produce", light:"green"},
+  {id:"ginger",     name:"Fresh ginger root",      icon:"🫚", cat:"Produce", light:"green"},
+  {id:"blackberry", name:"Blackberries",           icon:"🫐", cat:"Produce", light:"green"},
+  {id:"raspberry",  name:"Raspberries",            icon:"🫐", cat:"Produce", light:"green"},
+  {id:"blueberry",  name:"Blueberries",            icon:"🫐", cat:"Produce", light:"green"},
+  {id:"strawberry", name:"Strawberries",           icon:"🍓", cat:"Produce", light:"green"},
+  {id:"granny",     name:"Granny Smith apples",    icon:"🍏", cat:"Produce", light:"yellow"},
+  {id:"kiwi",       name:"Gold kiwis",             icon:"🥝", cat:"Produce", light:"yellow"},
+  // Meat & Seafood
+  {id:"bison",      name:"Bison",                  icon:"🦬", cat:"Meat & Seafood", light:"green"},
+  {id:"salmon",     name:"Salmon",                 icon:"🐟", cat:"Meat & Seafood", light:"green"},
+  {id:"chicken",    name:"Chicken tenders / breast",icon:"🍗",cat:"Meat & Seafood", light:"green"},
+  {id:"meatballs",  name:"Amylu chicken meatballs",icon:"🍗", cat:"Meat & Seafood", light:"green"},
+  // Dairy & Eggs
+  {id:"eggs",       name:"Eggs",                   icon:"🥚", cat:"Dairy & Eggs", light:"green"},
+  {id:"yogurt",     name:"FAGE 2% Greek yogurt",   icon:"🥛", cat:"Dairy & Eggs", light:"green"},
+  {id:"almondmilk", name:"Unsweetened almond milk",icon:"🥛", cat:"Dairy & Eggs", light:"green"},
+  // Canned & Protein Snacks
+  {id:"sardines",   name:"Sardines (olive oil/water)",icon:"🐟",cat:"Canned & Protein Snacks", light:"green"},
+  {id:"tuna",       name:"Canned skipjack tuna",   icon:"🐟", cat:"Canned & Protein Snacks", light:"green"},
+  {id:"clams",      name:"Canned clams",           icon:"🦪", cat:"Canned & Protein Snacks", light:"green"},
+  {id:"beefsticks", name:"Chomps beef sticks",     icon:"🥩", cat:"Canned & Protein Snacks", light:"green"},
+  // Fats & Nuts
+  {id:"oliveoil",   name:"Extra virgin olive oil", icon:"🫒", cat:"Fats & Nuts", light:"green"},
+  {id:"avomayo",    name:"Avocado oil mayo",       icon:"🫙", cat:"Fats & Nuts", light:"green"},
+  {id:"walnuts",    name:"Walnuts",                icon:"🌰", cat:"Fats & Nuts", light:"green"},
+  {id:"pumpkin",    name:"Pumpkin seeds",          icon:"🎃", cat:"Fats & Nuts", light:"green"},
+  {id:"chia",       name:"Chia seeds",             icon:"⚫️", cat:"Fats & Nuts", light:"green"},
+  // Drinks & Condiments
+  {id:"bonebroth",  name:"Bone broth",             icon:"🍵", cat:"Drinks & Condiments", light:"green"},
+  {id:"sparkling",  name:"Sparkling water",        icon:"💧", cat:"Drinks & Condiments", light:"green"},
+  {id:"salsa",      name:"Lucky Habanero Salsa",   icon:"🌶", cat:"Drinks & Condiments", light:"green"},
+  {id:"mustard",    name:"Yellow mustard",         icon:"🫙", cat:"Drinks & Condiments", light:"green"},
+  {id:"pgarlic",    name:"Pickled garlic",         icon:"🧄", cat:"Drinks & Condiments", light:"green"},
+  {id:"saltpepper", name:"Salt & pepper (no grinder)",icon:"🧂",cat:"Drinks & Condiments", light:"green"},
+  // Spices
+  {id:"cinnamon",   name:"Ceylon cinnamon",        icon:"🟤", cat:"Spices", light:"green"},
+  {id:"oregano",    name:"Oregano",                icon:"🌿", cat:"Spices", light:"green"},
+  {id:"parsley",    name:"Parsley",                icon:"🌿", cat:"Spices", light:"green"},
+  {id:"cumin",      name:"Cumin",                  icon:"🟤", cat:"Spices", light:"green"},
+  {id:"paprika",    name:"Smoked paprika",         icon:"🌶", cat:"Spices", light:"green"},
+  {id:"turmeric",   name:"Turmeric",               icon:"🟡", cat:"Spices", light:"green"},
+  {id:"onionpwd",   name:"Onion powder",           icon:"🧅", cat:"Spices", light:"green"},
+  {id:"garlicpwd",  name:"Garlic powder",          icon:"🧄", cat:"Spices", light:"green"},
+  {id:"cayenne",    name:"Cayenne",                icon:"🌶", cat:"Spices", light:"green"},
+  {id:"thyme",      name:"Thyme",                  icon:"🌿", cat:"Spices", light:"green"},
+  // Starches
+  {id:"rice",       name:"White rice (Lundberg)",  icon:"🍚", cat:"Starches", light:"yellow"},
+  {id:"oats",       name:"GF rolled oats",         icon:"🥣", cat:"Starches", light:"yellow"},
+  {id:"quinoa",     name:"Quinoa",                 icon:"🌾", cat:"Starches", light:"yellow"},
+  // Supplement
+  {id:"creatine",   name:"Creatine with HMB",      icon:"💊", cat:"Supplement", light:"green"},
+  {id:"nmn",        name:"NMN",                    icon:"💊", cat:"Supplement", light:"green"},
+  {id:"shilajit",   name:"Shilajit",               icon:"💊", cat:"Supplement", light:"green"},
+  {id:"beepollen",  name:"Bee pollen",             icon:"🐝", cat:"Supplement", light:"green"},
+  {id:"whey",       name:"Naked 100% whey isolate",icon:"🥛", cat:"Supplement", light:"green"},
 ];
 
-// ─────────────────────────────────────────────────────────────────
-// MEALS — each option lists ingredient IDs it requires
-// ─────────────────────────────────────────────────────────────────
-const MEALS = [
-  {
-    slot:1, time:"6:00 AM", hour:6, label:"Breakfast",
-    options:[
-      {name:"Frittata + banana + granola",         cal:500, effort:"⚡ zero-prep", needs:["frittata_tb","banana","granola"],        desc:"2 frittatas microwaved 90 sec + 1 banana + ½ cup sprouted granola"},
-      {name:"Eggs + turkey sausage + fruit",        cal:500, effort:"🔥 5-min",    needs:["eggs","turkey_saus","mixed_berries"],    desc:"3 scrambled eggs + 2 Applegate turkey sausage links + ½ cup berries + 1 cutie"},
-      {name:"Oatmeal + berries + PB",               cal:500, effort:"🔥 5-min",    needs:["oatmeal","almond_milk","mixed_berries","pb","flax"], desc:"1 cup GF oats cooked in almond milk + ½ cup berries + 2 Tbsp flaxseed + 1 Tbsp PB"},
-      {name:"PB banana yogurt bowl",                cal:490, effort:"⚡ zero-prep", needs:["greek_yog","pb","banana","chia"],        desc:"1 cup FAGE yogurt + 2 Tbsp PB + 1 banana sliced + 1 Tbsp chia seeds"},
-      {name:"Eggs + avocado + kiwi",                cal:510, effort:"🔥 5-min",    needs:["eggs","avocado","kiwi","olive_oil"],     desc:"3 eggs scrambled in olive oil + ½ avocado sliced + 2 yellow kiwis"},
-      {name:"Granola yogurt bowl",                  cal:500, effort:"⚡ zero-prep", needs:["greek_yog","granola","mixed_berries","chia"], desc:"1½ cups FAGE yogurt + ¾ cup granola + ½ cup berries + 1 Tbsp chia seeds"},
-      {name:"Pancakes + turkey sausage",            cal:510, effort:"🍳 10-min",   needs:["pancake_mix","turkey_saus","pb"],        desc:"Birch Benders pancakes (3 cakes) + 1 Tbsp PB on top + 2 turkey sausage links"},
-      {name:"Coconut Cult + granola + banana",      cal:480, effort:"⚡ zero-prep", needs:["coco_cult","granola","banana","pomegranate"], desc:"2 Coconut Cult cups + ¾ cup granola + 1 banana + ½ cup pomegranate seeds"},
-    ]
-  },
-  {
-    slot:2, time:"9:00 AM", hour:9, label:"Mid-morning",
-    options:[
-      {name:"Tuna + avocado + cashews + fruit",     cal:500, effort:"⚡ zero-prep", needs:["tuna","avocado","cashews","oranges"],   desc:"1 can tuna + ½ avocado + 1 Tbsp vegenaise + lemon + 1 cutie + 1 oz cashews"},
-      {name:"Frittata + berries + walnuts",         cal:490, effort:"⚡ zero-prep", needs:["frittata_sw","mixed_berries","walnuts"], desc:"2 spinach egg white frittatas microwaved + 1 cup berries + 1 oz walnuts"},
-      {name:"Greek yogurt parfait",                 cal:500, effort:"⚡ zero-prep", needs:["greek_yog","granola","frz_peaches","pumpkin_seeds"], desc:"1½ cups FAGE yogurt + ½ cup granola + ½ cup frozen peaches thawed + 2 Tbsp pumpkin seeds"},
-      {name:"Hard-boiled eggs + PB banana",         cal:510, effort:"⚡ zero-prep", needs:["eggs","pb","banana","walnuts"],         desc:"2 hard-boiled eggs + PB spread on 1 banana + 1 oz walnuts. Hard boil Sunday, grab all week."},
-      {name:"Sardines + avocado + watermelon",      cal:490, effort:"⚡ zero-prep", needs:["sardines","avocado","watermelon"],      desc:"1 can sardines + ½ avocado + lemon squeeze + 1 cup watermelon chunks. Omega-3 powerhouse."},
-      {name:"Beef sticks + banana + nuts",          cal:480, effort:"⚡ zero-prep", needs:["beef_sticks","banana","cashews","chia"], desc:"3 beef mini sticks + 1 banana + 1 oz cashews + 1 Tbsp chia. Zero prep, totally portable."},
-      {name:"Turkey burger bowl",                   cal:510, effort:"🔥 5-min",    needs:["turkey_burg","spinach","avocado","pickled_onion","bitchin"], desc:"1 turkey burger microwaved 2 min, crumbled over spinach + ½ avocado + pickled onions + Bitchin Sauce"},
-      {name:"Eggs + spinach scramble",              cal:500, effort:"🔥 5-min",    needs:["eggs","spinach","olive_oil","oranges","walnuts"], desc:"3 eggs scrambled with 2 cups baby spinach + olive oil + 1 cutie orange + 1 oz walnuts"},
-    ]
-  },
-  {
-    slot:3, time:"12:00 PM", hour:12, label:"Lunch",
-    options:[
-      {name:"Turkey burger + sweet potato + salad", cal:510, effort:"🍳 10-min",   needs:["turkey_burg","sweet_pot","spinach","bitchin"], desc:"1 WF turkey burger + 1 cup sweet potato microwaved 4 min + spinach salad + Bitchin Sauce"},
-      {name:"Ground beef + quinoa + peppers",       cal:510, effort:"🍳 15-min",   needs:["ground_beef","quinoa","frz_peppers","pickled_onion","mustard"], desc:"4 oz ground beef (pan 6 min) + ½ cup quinoa + frozen peppers + pickled onions + mustard"},
-      {name:"Chicken sausage + veggie kabobs",      cal:500, effort:"🍳 10-min",   needs:["chicken_saus","veg_kabobs","avocado"],   desc:"2 chicken sausages + full pack veggie kabobs (pan or air fryer) + ½ avocado"},
-      {name:"Big tuna spinach salad",               cal:500, effort:"⚡ zero-prep", needs:["tuna","spinach","avocado","pomegranate","hummus","sunflower"], desc:"1 can tuna + 3 cups spinach + ½ avocado + pomegranate seeds + 2 Tbsp hummus + sunflower seeds"},
-      {name:"Chicken nuggets + sweet potato",       cal:510, effort:"🔥 5-min",    needs:["chick_nugg","sweet_pot","spinach","hummus"], desc:"Applegate nuggets (air fryer 8 min) + 1 cup sweet potato microwaved + spinach + hummus dip"},
-      {name:"Veggie burger + avocado + salad",      cal:500, effort:"🔥 5-min",    needs:["veggie_burg","avocado","spinach","pickled_onion","bitchin"], desc:"Dr. Prager's veggie burger + ½ avocado + spinach + pickled onions + Bitchin Sauce + banana"},
-      {name:"Sardines + white rice + spinach",      cal:500, effort:"🔥 5-min",    needs:["sardines","white_rice","spinach","olive_oil","sundried_tom"], desc:"1 can sardines + ¾ cup rice + spinach wilted in olive oil + lemon + sun-dried tomatoes"},
-      {name:"Amy's burrito + spinach salad",        cal:510, effort:"⚡ zero-prep", needs:["amys_burrito","spinach","avocado","hummus"], desc:"1 Amy's burrito microwaved + big spinach salad with avocado + hummus + lemon"},
-    ]
-  },
-  {
-    slot:4, time:"3:00 PM", hour:15, label:"Afternoon",
-    options:[
-      {name:"Ground beef + veggie kabobs + quinoa", cal:500, effort:"🍳 15-min",   needs:["ground_beef","veg_kabobs","quinoa","pickled_onion"], desc:"4 oz ground beef + 1 cup kabob veggies (pan together) + ½ cup quinoa + pickled onions"},
-      {name:"Turkey burger + potato blend",         cal:510, effort:"🔥 5-min",    needs:["turkey_burg","frz_potato"],             desc:"1 turkey burger microwaved + 1 cup WF baby potato blend microwaved. Two items, 4 minutes total."},
-      {name:"Chicken sausage + spinach + avocado",  cal:500, effort:"🔥 5-min",    needs:["chicken_saus","spinach","avocado","olive_oil"], desc:"2 chicken sausages sliced + 2 cups spinach sautéed in olive oil + ½ avocado + lemon"},
-      {name:"Tuna + kidney beans + avocado",        cal:500, effort:"⚡ zero-prep", needs:["tuna","kidney_beans","avocado","pickled_onion"], desc:"1 can tuna + ½ cup kidney beans + ½ avocado + lemon + olive oil + pickled onions. Zero cooking."},
-      {name:"Eggs + sweet potato hash",             cal:510, effort:"🍳 10-min",   needs:["eggs","sweet_pot","frz_peppers","olive_oil"], desc:"3 eggs + 1 cup sweet potato (microwave 3 min, pan fry 3 min) + bell pepper blend"},
-      {name:"Clams + white rice + spinach",         cal:490, effort:"🔥 5-min",    needs:["clams","white_rice","spinach","olive_oil"], desc:"1 can clams + ¾ cup rice + 2 cups spinach wilted + olive oil + lemon + garlic"},
-      {name:"Veggie burger + quinoa bowl",          cal:500, effort:"🔥 5-min",    needs:["veggie_burg","quinoa","spinach","avocado","bitchin"], desc:"Dr. Prager's veggie burger crumbled over ½ cup quinoa + spinach + avocado + Bitchin Sauce"},
-      {name:"Beef sticks + fruit bowl",             cal:490, effort:"⚡ zero-prep", needs:["beef_sticks","watermelon","banana","cashews","walnuts"], desc:"4 beef mini sticks + 1 cup watermelon + 1 banana + 1 oz cashews + 1 oz walnuts. Emergency desk meal."},
-    ]
-  },
-  {
-    slot:5, time:"6:00 PM", hour:18, label:"Dinner",
-    options:[
-      {name:"Ground beef + quinoa + veggie kabobs", cal:520, effort:"🍳 15-min",   needs:["ground_beef","quinoa","veg_kabobs","olive_oil"], desc:"5 oz grass-fed beef patty + ½ cup quinoa + veggie kabobs. All cook simultaneously."},
-      {name:"Mary's chicken + sweet potato + spinach",cal:510,effort:"🍳 15-min",  needs:["chicken_br","sweet_pot","spinach","bitchin"], desc:"5 oz chicken breast (pan 7 min/side) + 1 cup sweet potato microwaved + sautéed spinach + Bitchin Sauce"},
-      {name:"Nipit + white rice + spinach salad",   cal:500, effort:"🔥 5-min",    needs:["nipit","white_rice","spinach","avocado"], desc:"Burmese nipit dish + ¾ cup rice + spinach salad with avocado + lemon. Your wife's dish = zero decision."},
-      {name:"Chicken sausage + potato blend + salad",cal:500,effort:"🔥 5-min",    needs:["chicken_saus","frz_potato","spinach","pickled_onion","bitchin"], desc:"2 chicken sausages + WF baby potato blend microwaved + spinach salad + pickled onions + Bitchin Sauce"},
-      {name:"Turkey burger + avocado + sweet potato",cal:510,effort:"🍳 10-min",   needs:["turkey_burg","avocado","sweet_pot","spinach","pickled_onion"], desc:"1 WF caramelized onion turkey burger + ½ avocado + sweet potato microwaved + spinach"},
-      {name:"Ground beef stir-fry + peppers + rice", cal:510, effort:"🍳 15-min",  needs:["ground_beef","frz_peppers","garlic_frz","white_rice","broth"], desc:"5 oz ground beef + frozen peppers + garlic + broth + ¾ cup white rice. One pan."},
-      {name:"Veggie kabobs + eggs + quinoa",         cal:490, effort:"🍳 10-min",  needs:["veg_kabobs","eggs","quinoa","olive_oil"], desc:"Full pack veggie kabobs + 2 eggs fried in olive oil + ½ cup quinoa. Light but filling."},
-      {name:"Chicken nuggets + potato blend + salad",cal:500,effort:"🔥 5-min",    needs:["chick_nugg","frz_potato","spinach","hummus","avocado"], desc:"Applegate nuggets air-fried + WF baby potato blend + spinach salad with hummus + avocado"},
-    ]
-  },
-  {
-    slot:6, time:"8:30 PM", hour:20.5, label:"Evening block", isEvening:true,
-    options:[
-      {name:"Greek yogurt + berries + chia",   cal:200, effort:"⚡ zero-prep", needs:["greek_yog","mixed_berries","chia"],      desc:"¾ cup FAGE yogurt + ½ cup berries + 1 Tbsp chia. Best binge blocker you have — slow protein."},
-      {name:"PB + banana",                     cal:200, effort:"⚡ zero-prep", needs:["pb","banana"],                         desc:"1 banana + 1 Tbsp peanut butter. 3 minutes, 0 decisions."},
-      {name:"Walnuts + dried mango",           cal:200, effort:"⚡ zero-prep", needs:["walnuts","dried_mango"],               desc:"1 oz walnuts + small handful dried mango (~1.5 oz). Satisfying fat + natural sugar combo."},
-      {name:"Coconut Cult + kiwi",             cal:200, effort:"⚡ zero-prep", needs:["coco_cult","kiwi"],                    desc:"1 Coconut Cult cup + 2 yellow kiwis. Probiotic dessert vibe."},
-      {name:"Tuna + avocado",                  cal:200, effort:"⚡ zero-prep", needs:["tuna","avocado"],                      desc:"½ can tuna + ¼ avocado mashed + lemon. Pure protein + fat — kills evening hunger dead."},
-      {name:"Cashews + cuties",                cal:200, effort:"⚡ zero-prep", needs:["cashews","oranges"],                   desc:"1 oz cashews + 2 cuties. Crunchy + sweet — hits all binge-trigger textures safely."},
-      {name:"Granola + almond milk",           cal:200, effort:"⚡ zero-prep", needs:["granola","almond_milk"],               desc:"½ cup granola + ½ cup almond milk. Feels like a treat, counts as fuel."},
-      {name:"Applesauce + pumpkin seeds",      cal:200, effort:"⚡ zero-prep", needs:["applesauce","pumpkin_seeds","chia"],   desc:"¾ cup unsweetened applesauce + 2 Tbsp pumpkin seeds + chia. Soft, sweet, zero prep."},
-    ]
-  }
-];
+const CAT_ORDER = ["Produce","Meat & Seafood","Dairy & Eggs","Canned & Protein Snacks","Fats & Nuts","Drinks & Condiments","Spices","Starches","Supplement","Other"];
 
-// ─────────────────────────────────────────────────────────────────
-// STORAGE KEYS
-// ─────────────────────────────────────────────────────────────────
-const MEAL_KEY   = "imt3:";
-const STOCK_KEY  = "imt3_stock";
-const CUSTOM_KEY = "imt3_custom";
+// ── STORAGE ──────────────────────────────────────────────────────
+const STOCK_KEY="gl1_stock", CUSTOM_KEY="gl1_custom", GOT_KEY="gl1_got";
+let outOfStock=new Set();     // ids needing purchase
+let gotItems=new Set();       // ids checked off while shopping
+let customItems=[];
 
-// ─────────────────────────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────────────────────────
-function todayKey(){
-  const d=new Date();
-  if(d.getHours()<4) d.setDate(d.getDate()-1);
-  return d.toISOString().split('T')[0];
+function load(){
+  try{const r=localStorage.getItem(STOCK_KEY); if(r) outOfStock=new Set(JSON.parse(r));}catch(e){}
+  try{const r=localStorage.getItem(CUSTOM_KEY); if(r) customItems=JSON.parse(r);}catch(e){}
+  try{const r=localStorage.getItem(GOT_KEY); if(r) gotItems=new Set(JSON.parse(r));}catch(e){}
 }
+function saveStock(){ try{localStorage.setItem(STOCK_KEY,JSON.stringify([...outOfStock]));}catch(e){} }
+function saveCustom(){ try{localStorage.setItem(CUSTOM_KEY,JSON.stringify(customItems));}catch(e){} }
+function saveGot(){ try{localStorage.setItem(GOT_KEY,JSON.stringify([...gotItems]));}catch(e){} }
+function allItems(){ return [...ITEMS, ...customItems]; }
 
-let state = {date:todayKey(), meals:{}};
-let outOfStock = new Set();
-let customIngredients = []; // user-added items
-
-function loadState(){
-  try{
-    const raw=localStorage.getItem(MEAL_KEY+state.date);
-    if(raw){const p=JSON.parse(raw);if(p.date===state.date)state.meals=p.meals||{};}
-  }catch(e){}
-  MEALS.forEach(m=>{if(!state.meals[m.slot])state.meals[m.slot]={idx:0,status:'pending'};});
-  try{
-    const raw=localStorage.getItem(STOCK_KEY);
-    if(raw) outOfStock=new Set(JSON.parse(raw));
-  }catch(e){}
-  try{
-    const raw=localStorage.getItem(CUSTOM_KEY);
-    if(raw) customIngredients=JSON.parse(raw);
-  }catch(e){}
-}
-
-function saveMeals(){
-  try{localStorage.setItem(MEAL_KEY+state.date,JSON.stringify({date:state.date,meals:state.meals}));}catch(e){}
-}
-
-function saveStock(){
-  try{localStorage.setItem(STOCK_KEY,JSON.stringify([...outOfStock]));}catch(e){}
-}
-
-function saveCustom(){
-  try{localStorage.setItem(CUSTOM_KEY,JSON.stringify(customIngredients));}catch(e){}
-}
-
-// ─────────────────────────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────────────────────────
-function mealAvailable(option){
-  return option.needs.every(id=>!outOfStock.has(id));
-}
-
-function mealMissingItems(option){
-  return option.needs.filter(id=>outOfStock.has(id));
-}
-
-function getIngName(id){
-  const ing=INGREDIENTS.find(i=>i.id===id);
-  return ing?ing.name:id;
-}
-
-// ─────────────────────────────────────────────────────────────────
-// RENDER TRACKER
-// ─────────────────────────────────────────────────────────────────
-function renderTracker(){
-  document.getElementById('today-date').textContent=
-    new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
-
-  const now=new Date();
-  const nowH=now.getHours()+now.getMinutes()/60;
-
-  // Next pending meal
-  let nextIdx=-1;
-  for(let i=0;i<MEALS.length;i++){
-    const st=state.meals[MEALS[i].slot];
-    if(st.status!=='pending') continue;
-    if(nextIdx===-1||MEALS[i].hour<MEALS[nextIdx].hour) nextIdx=i;
-  }
-
-  // Countdown
-  const nv=document.getElementById('next-val');
-  nv.className='val';
-  if(nextIdx===-1){nv.textContent='All done today ✓';}
-  else{
-    const m=MEALS[nextIdx];
-    const diff=m.hour-nowH;
-    if(diff<=0){
-      const ov=Math.round(-diff*60);
-      nv.textContent=ov===0?`${m.label} — EAT NOW`:`${m.label} — ${ov}m overdue`;
-      nv.classList.add('due','pulse');
-    } else if(diff<1){
-      nv.textContent=`${m.label} in ${Math.round(diff*60)}m`;
-      nv.classList.add('due');
-    } else {
-      const h=Math.floor(diff),mn=Math.round((diff-h)*60);
-      nv.textContent=`${m.label} in ${h>0?h+'h ':''}${mn}m`;
-    }
-  }
-
-  // Stats
-  let eaten=0,done=0;
-  MEALS.forEach(m=>{
-    const st=state.meals[m.slot];
-    if(st.status==='ate'){eaten+=(st.cal||m.options[st.idx].cal);done++;}
-    else if(st.status==='skipped') done++;
-  });
-  document.getElementById('cal-eaten').textContent=eaten.toLocaleString();
-  const rem=2700-eaten;
-  const remEl=document.getElementById('cal-left');
-  remEl.textContent=rem.toLocaleString();
-  remEl.className='v'+(rem<0?' over':rem<=300?' good':'');
-  document.getElementById('meals-done').textContent=`${done}/6`;
-
-  // Meal cards
-  const container=document.getElementById('meal-cards');
-  container.innerHTML='';
-
-  MEALS.forEach((m,i)=>{
-    const st=state.meals[m.slot];
-    const sel=m.options[st.idx];
-    const selAvail=mealAvailable(sel);
-    const selMissing=mealMissingItems(sel);
-    const diff=m.hour-nowH;
-    const isDue=i===nextIdx&&diff<=0;
-    const isActive=i===nextIdx&&diff>0&&diff<1;
-    const availableCount=m.options.filter(o=>mealAvailable(o)).length;
-
-    const card=document.createElement('div');
-    card.className='meal-card'
-      +(st.status!=='pending'?' done':'')
-      +(m.isEvening?' evening':'')
-      +(isActive?' active':'')
-      +(isDue?' due':'');
-
-    let actionHtml='';
-    if(st.status==='pending'){
-      actionHtml=`<button class="btn primary" data-a="ate" data-s="${m.slot}">✓ Ate it</button>
-                  <button class="btn" data-a="skip" data-s="${m.slot}">Skip</button>`;
-    } else {
-      actionHtml=`<button class="btn ${st.status==='ate'?'ate':'skipped'}" data-a="undo" data-s="${m.slot}">${st.status==='ate'?'✓ Eaten':'Skipped'} — undo</button>`;
-    }
-
-    const oosWarning=!selAvail&&st.status==='pending'
-      ?`<div class="out-of-stock-badge">⚠️ Missing: ${selMissing.map(getIngName).join(', ')} — tap Swap</div>`:'';
-
-    const swaps=m.options.map((o,j)=>{
-      const avail=mealAvailable(o);
-      const missing=mealMissingItems(o);
-      return `<div class="swap-item${avail?'':' unavailable'}" data-s="${m.slot}" data-i="${j}">
-        <span>${j===st.idx?'● ':'○ '}${o.name}${!avail?` <span class="sw-oos">⚠ out of stock</span>`:''}</span>
-        <span class="sc">${o.cal} cal</span>
-      </div>`;
-    }).join('');
-
-    card.innerHTML=`
-      <div class="meal-card-top">
-        <div class="num">${m.slot}</div>
-        <div class="time-lbl">
-          <div class="t">${m.time}</div>
-          <div class="l">${m.label}</div>
-        </div>
-      </div>
-      <div class="meal-name">${sel.name}</div>
-      <div class="meal-effort">${sel.effort}</div>
-      ${oosWarning}
-      <div class="meal-desc">${sel.desc}</div>
-      ${m.isEvening?'<div class="ev-note">Your binge-insurance snack. Eat on schedule — don\'t skip even if not hungry.</div>':''}
-      <div class="actions">${actionHtml}</div>
-      <details>
-        <summary>Swap · ${availableCount} available / ${m.options.length} total</summary>
-        <div class="swap-list">${swaps}</div>
-      </details>`;
-    container.appendChild(card);
-  });
-
-  // Wire button events
-  container.querySelectorAll('.btn[data-a]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const slot=+btn.dataset.s, a=btn.dataset.a, st=state.meals[slot];
-      const meal=MEALS.find(m=>m.slot===slot);
-      if(a==='ate'){st.status='ate';st.cal=meal.options[st.idx].cal;}
-      else if(a==='skip') st.status='skipped';
-      else if(a==='undo'){st.status='pending';delete st.cal;}
-      saveMeals(); renderTracker();
-    });
-  });
-
-  // Wire swap events
-  container.querySelectorAll('.swap-item:not(.unavailable)[data-s]').forEach(item=>{
-    item.addEventListener('click',()=>{
-      const slot=+item.dataset.s, idx=+item.dataset.i, st=state.meals[slot];
-      st.idx=idx;
-      if(st.status==='ate') st.cal=MEALS.find(m=>m.slot===slot).options[idx].cal;
-      saveMeals(); renderTracker();
-    });
-  });
-}
-
-// ─────────────────────────────────────────────────────────────────
-// RENDER PANTRY
-// ─────────────────────────────────────────────────────────────────
+// ── PANTRY ───────────────────────────────────────────────────────
 function renderPantry(){
-  const oosCount=outOfStock.size;
-  const badge=document.getElementById('oos-count-badge');
-  badge.innerHTML=oosCount>0
-    ?`<span class="oos-count">⚠️ ${oosCount} item${oosCount>1?'s':''} out of stock</span>`:'';
+  const n=outOfStock.size;
+  document.getElementById('oos-count-badge').innerHTML =
+    n>0 ? '<span class="oos-count">'+n+' item'+(n>1?'s':'')+' to buy</span>' : '';
 
-  // Combine built-in + custom ingredients
-  const allIngredients=[...INGREDIENTS, ...customIngredients];
-
-  // Group by category
   const groups={};
-  allIngredients.forEach(ing=>{
-    if(!groups[ing.cat]) groups[ing.cat]=[];
-    groups[ing.cat].push(ing);
-  });
+  allItems().forEach(it=>{ (groups[it.cat]=groups[it.cat]||[]).push(it); });
 
+  const cats=CAT_ORDER.filter(c=>groups[c]).concat(Object.keys(groups).filter(c=>!CAT_ORDER.includes(c)));
   const list=document.getElementById('ingredient-list');
   list.innerHTML='';
 
-  Object.entries(groups).forEach(([cat,ings])=>{
-    const title=document.createElement('div');
-    title.className='section-title';
-    title.textContent=cat;
-    list.appendChild(title);
-
-    ings.forEach(ing=>{
-      const oos=outOfStock.has(ing.id);
-      const isCustom=!!ing.custom;
-
-      const item=document.createElement('div');
-      item.className='ing-item'+(oos?' oos':'')+(isCustom?' ing-item-custom':'');
-
-      const delBtn=isCustom
-        ?`<button class="del-btn" data-del="${ing.id}" title="Remove item">✕</button>`:'';
-
-      item.innerHTML=`
-        <div class="ing-left">
-          <div class="ing-icon">${ing.icon||'📦'}</div>
-          <div>
-            <div class="ing-name">${ing.name}${isCustom?'<span class="custom-badge">custom</span>':''}</div>
-            <div class="ing-cat">${ing.group}</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:4px;">
-          <div class="ing-toggle">${oos?'✕':'✓'}</div>
-          ${delBtn}
-        </div>`;
-
-      // Toggle in/out of stock (click on item body, not delete btn)
-      item.addEventListener('click',(e)=>{
+  cats.forEach(cat=>{
+    const t=document.createElement('div');
+    t.className='section-title'; t.textContent=cat;
+    list.appendChild(t);
+    groups[cat].forEach(it=>{
+      const oos=outOfStock.has(it.id), custom=!!it.custom;
+      const row=document.createElement('div');
+      row.className='ing-item'+(oos?' oos':'')+(custom?' ing-item-custom':'');
+      row.innerHTML=
+        '<div class="ing-left"><div class="ing-icon">'+(it.icon||'📦')+'</div><div>'
+        +'<div class="ing-name">'+it.name
+        +(it.light==='yellow'?'<span class="yel-pill">🟡</span>':'')
+        +(custom?'<span class="custom-badge">custom</span>':'')+'</div>'
+        +'<div class="ing-sub">'+(oos?'on shopping list':'in stock')+'</div>'
+        +'</div></div>'
+        +'<div class="ing-right"><div class="ing-toggle">'+(oos?'✕':'✓')+'</div>'
+        +(custom?'<button class="del-btn" data-del="'+it.id+'">✕</button>':'')+'</div>';
+      row.addEventListener('click',e=>{
         if(e.target.closest('.del-btn')) return;
-        if(outOfStock.has(ing.id)) outOfStock.delete(ing.id);
-        else outOfStock.add(ing.id);
-        saveStock();
-        renderPantry();
-        renderTracker();
-        renderShop();
+        if(outOfStock.has(it.id)){ outOfStock.delete(it.id); gotItems.delete(it.id); }
+        else outOfStock.add(it.id);
+        saveStock(); saveGot(); renderPantry(); renderShop();
       });
-
-      list.appendChild(item);
+      list.appendChild(row);
     });
   });
 
-  // Wire delete buttons
-  list.querySelectorAll('.del-btn[data-del]').forEach(btn=>{
-    btn.addEventListener('click',(e)=>{
+  list.querySelectorAll('.del-btn[data-del]').forEach(b=>{
+    b.addEventListener('click',e=>{
       e.stopPropagation();
-      const id=btn.dataset.del;
-      const ing=customIngredients.find(i=>i.id===id);
-      if(!ing) return;
-      if(confirm(`Remove "${ing.name}" from your pantry?`)){
-        customIngredients=customIngredients.filter(i=>i.id!==id);
-        outOfStock.delete(id);
-        saveCustom();
-        saveStock();
-        renderPantry();
-        renderTracker();
-        renderShop();
+      const id=b.dataset.del;
+      const it=customItems.find(x=>x.id===id);
+      if(it && confirm('Remove "'+it.name+'" from your pantry?')){
+        customItems=customItems.filter(x=>x.id!==id);
+        outOfStock.delete(id); gotItems.delete(id);
+        saveCustom(); saveStock(); saveGot(); renderPantry(); renderShop();
       }
     });
   });
 }
 
-// ─────────────────────────────────────────────────────────────────
-// RENDER SHOP
-// ─────────────────────────────────────────────────────────────────
+// ── SHOP ─────────────────────────────────────────────────────────
 function renderShop(){
-  const shopList=document.getElementById('shop-list');
-  shopList.innerHTML='';
-  const allIngredients=[...INGREDIENTS,...customIngredients];
-
+  const el=document.getElementById('shop-list');
+  el.innerHTML='';
   if(outOfStock.size===0){
-    shopList.innerHTML='<div class="shop-empty">✅ Everything is in stock!<br><span style="font-size:12px;color:#ccc;">Mark items out of stock in the Pantry tab to build your list.</span></div>';
+    el.innerHTML='<div class="shop-empty">Nothing on the list yet ✓<br><span style="font-size:12px;color:#ccc;">Mark items out of stock in the Pantry tab and they show up here.</span></div>';
     return;
   }
+  const items=allItems().filter(it=>outOfStock.has(it.id));
+  const groups={};
+  items.forEach(it=>{ (groups[it.cat]=groups[it.cat]||[]).push(it); });
+  const cats=CAT_ORDER.filter(c=>groups[c]).concat(Object.keys(groups).filter(c=>!CAT_ORDER.includes(c)));
 
-  const title=document.createElement('div');
-  title.className='section-title';
-  title.textContent='Out of stock — need to buy';
-  shopList.appendChild(title);
+  const gotCount=items.filter(it=>gotItems.has(it.id)).length;
 
-  outOfStock.forEach(id=>{
-    const ing=allIngredients.find(i=>i.id===id);
-    if(!ing) return;
-    const item=document.createElement('div');
-    item.className='shop-item';
-    item.innerHTML=`
-      <div class="si-icon">${ing.icon||'📦'}</div>
-      <div>
-        <div class="si-name">${ing.name}</div>
-        <div class="si-cat">${ing.cat} · ${ing.group}</div>
-      </div>`;
-    shopList.appendChild(item);
+  cats.forEach(cat=>{
+    const t=document.createElement('div');
+    t.className='section-title'; t.textContent=cat;
+    el.appendChild(t);
+    groups[cat].forEach(it=>{
+      const got=gotItems.has(it.id);
+      const row=document.createElement('div');
+      row.className='shop-item'+(got?' got':'');
+      row.innerHTML='<div class="si-check">'+(got?'✓':'')+'</div>'
+        +'<div class="si-icon">'+(it.icon||'📦')+'</div>'
+        +'<div class="si-name">'+it.name+'</div>'
+        +(it.light==='yellow'?'<span class="yel-pill">🟡</span>':'');
+      row.addEventListener('click',()=>{
+        if(gotItems.has(it.id)) gotItems.delete(it.id); else gotItems.add(it.id);
+        saveGot(); renderShop();
+      });
+      el.appendChild(row);
+    });
   });
 
-  const clearBtn=document.createElement('button');
-  clearBtn.className='clear-oos';
-  clearBtn.textContent='✓ Mark everything back in stock';
-  clearBtn.addEventListener('click',()=>{
-    if(confirm('Mark all items back in stock?')){
-      outOfStock.clear();
-      saveStock();
-      renderPantry();
-      renderTracker();
-      renderShop();
+  const clear=document.createElement('button');
+  clear.className='clear-oos';
+  clear.textContent='✓ Done shopping · restock everything';
+  clear.addEventListener('click',()=>{
+    if(confirm('Mark all '+items.length+' items back in stock?')){
+      items.forEach(it=>{ outOfStock.delete(it.id); gotItems.delete(it.id); });
+      saveStock(); saveGot(); renderPantry(); renderShop();
     }
   });
-  shopList.appendChild(clearBtn);
+  el.appendChild(clear);
 }
 
-// ─────────────────────────────────────────────────────────────────
-// TAB NAVIGATION
-// ─────────────────────────────────────────────────────────────────
-function showTab(name){
+// ── TABS ─────────────────────────────────────────────────────────
+function showTab(name, el){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  event.target.classList.add('active');
+  if(el) el.classList.add('active');
 }
 
-// ─────────────────────────────────────────────────────────────────
-// CHIME
-// ─────────────────────────────────────────────────────────────────
-let lastChimed=null, audioCtx=null;
-function playChime(){
-  if(!document.getElementById('chime-on').checked) return;
-  try{
-    if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-    const t=audioCtx.currentTime;
-    [523,659,784].forEach((f,i)=>{
-      const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-      o.frequency.value=f;o.type='sine';
-      g.gain.setValueAtTime(0,t+i*.15);
-      g.gain.linearRampToValueAtTime(.18,t+i*.15+.02);
-      g.gain.exponentialRampToValueAtTime(.001,t+i*.15+.65);
-      o.connect(g).connect(audioCtx.destination);
-      o.start(t+i*.15);o.stop(t+i*.15+.65);
-    });
-  }catch(e){}
-}
-function checkChime(){
-  const now=new Date(),h=now.getHours()+now.getMinutes()/60+now.getSeconds()/3600;
-  MEALS.forEach(m=>{
-    if(state.meals[m.slot].status!=='pending') return;
-    if(Math.abs(m.hour-h)<0.0083&&lastChimed!==m.slot){lastChimed=m.slot;playChime();}
-  });
-}
-
-// ─────────────────────────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────────────────────────
-loadState();
-renderTracker();
-renderPantry();
-renderShop();
-
-setInterval(()=>{
-  const d=todayKey();
-  if(d!==state.date){
-    state.date=d;state.meals={};
-    MEALS.forEach(m=>{state.meals[m.slot]={idx:0,status:'pending'};});
-    lastChimed=null;
-  }
-  checkChime();
-  renderTracker();
-},30000);
-
-document.addEventListener('click',()=>{
-  if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}
-},{once:true});
-
-document.getElementById('reset-btn').addEventListener('click',()=>{
-  if(confirm('Reset all meals for today?')){
-    MEALS.forEach(m=>{state.meals[m.slot]={idx:0,status:'pending'};});
-    saveMeals();renderTracker();
-  }
-});// ─────────────────────────────────────────────────────────────────
-// ADD ITEM MODAL
-// ─────────────────────────────────────────────────────────────────
+// ── ADD ITEM MODAL ───────────────────────────────────────────────
 const addModal=document.getElementById('add-modal');
-
 document.getElementById('open-add-modal').addEventListener('click',()=>{
   document.getElementById('new-ing-name').value='';
   document.getElementById('new-ing-icon').value='';
   addModal.classList.add('open');
-  setTimeout(()=>document.getElementById('new-ing-name').focus(),100);
 });
-
-document.getElementById('close-add-modal').addEventListener('click',()=>{
-  addModal.classList.remove('open');
-});
-
-// Close if tapping overlay backdrop
-addModal.addEventListener('click',(e)=>{
-  if(e.target===addModal) addModal.classList.remove('open');
-});
-
+document.getElementById('close-add-modal').addEventListener('click',()=>addModal.classList.remove('open'));
+addModal.addEventListener('click',e=>{ if(e.target===addModal) addModal.classList.remove('open'); });
 document.getElementById('save-add-modal').addEventListener('click',()=>{
-  const name=document.getElementById('new-ing-name').value.trim();
-  if(!name){
-    document.getElementById('new-ing-name').focus();
-    document.getElementById('new-ing-name').style.borderColor='#c0392b';
-    return;
-  }
-  document.getElementById('new-ing-name').style.borderColor='';
-
-  const cat=document.getElementById('new-ing-cat').value;
-  const group=document.getElementById('new-ing-group').value;
-  const iconInput=document.getElementById('new-ing-icon').value.trim();
-  const icon=iconInput||'📦';
-
-  // Generate a unique ID
-  const id='custom_'+Date.now();
-
-  const newIng={id, name, icon, cat, group, custom:true};
-  customIngredients.push(newIng);
+  const nameEl=document.getElementById('new-ing-name');
+  const name=nameEl.value.trim();
+  if(!name){ nameEl.style.borderColor='#c0392b'; nameEl.focus(); return; }
+  nameEl.style.borderColor='';
+  customItems.push({
+    id:'custom_'+Date.now(),
+    name,
+    icon:document.getElementById('new-ing-icon').value.trim()||'📦',
+    cat:document.getElementById('new-ing-cat').value,
+    light:document.getElementById('new-ing-light').value,
+    custom:true
+  });
   saveCustom();
-
   addModal.classList.remove('open');
   renderPantry();
-  renderShop();
-
-  // Brief success flash
-  const btn=document.getElementById('open-add-modal');
-  const orig=btn.textContent;
-  btn.textContent=`✓ "${name}" added`;
-  btn.style.color='#0a6b4e';
-  btn.style.borderColor='#a8d8c8';
-  setTimeout(()=>{btn.textContent=orig;btn.style.color='';btn.style.borderColor='';},2000);
 });
-
-// Allow Enter key in name field to save
-document.getElementById('new-ing-name').addEventListener('keydown',(e)=>{
+document.getElementById('new-ing-name').addEventListener('keydown',e=>{
   if(e.key==='Enter') document.getElementById('save-add-modal').click();
 });
 
+// ── INIT ─────────────────────────────────────────────────────────
+load();
+renderPantry();
+renderShop();
 </script>
 </body>
 </html>
